@@ -1,0 +1,4 @@
+R5T.D0038.Base - Base definitions library for the ILibGit2SharpOperator service – synchronous, strongly-typed (T0010-based).
+
+Goals
+
