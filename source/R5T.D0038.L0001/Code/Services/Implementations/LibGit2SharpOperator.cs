@@ -1,17 +1,54 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 
+using R5T.D0046;
 using R5T.L0001;
 using R5T.T0008;
 using R5T.T0010;
 
 
-namespace R5T.D0038
+namespace R5T.D0038.L0001
 {
     public class LibGit2SharpOperator : ILibGit2SharpOperator
     {
-        public RevisionIdentity GetLatestLocalMasterRevision(LocalRepositoryContainedPath path)
+        private IGitAuthenticationProvider GitAuthenticationProvider { get; }
+
+
+        public LibGit2SharpOperator(
+            IGitAuthenticationProvider gitAuthenticationProvider)
+        {
+            this.GitAuthenticationProvider = gitAuthenticationProvider;
+        }
+
+        // Adapted from here: https://github.com/libgit2/libgit2sharp/wiki/git-fetch
+        public async Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
+        {
+            var authentication = await this.GitAuthenticationProvider.GetGitAuthentication();
+
+            var fetchOptions = new FetchOptions
+            {
+                CredentialsProvider = new CredentialsHandler((url, usernameFromUrl, types) =>
+                    new UsernamePasswordCredentials()
+                    {
+                        Username = authentication.Username,
+                        Password = authentication.Password,
+                    })
+            };
+
+            using (var repository = new Repository(localRepositoryDirectoryPath.Value))
+            {
+                var remote = repository.Network.Remotes[GitHelper.OriginRemoteName];
+                var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
+
+                Commands.Fetch(repository, remote.Name, refSpecs, fetchOptions, String.Empty);
+            }
+        }
+
+        public Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path)
         {
             var repositoryPath = RepositoryHelper.DiscoverRepositoryPath(path.Value);
 
@@ -22,11 +59,12 @@ namespace R5T.D0038
                 var tipCommit = masterBranch.Tip;
 
                 var revisionIdentity = RevisionIdentity.From(tipCommit.Sha);
-                return revisionIdentity;
+
+                return Task.FromResult(revisionIdentity);
             }
         }
 
-        public RemoteRepositoryUrl GetRemoteOriginUrl(LocalRepositoryContainedPath path)
+        public Task<RemoteRepositoryUrl> GetRemoteOriginUrl(LocalRepositoryContainedPath path)
         {
             var repositoryPath = RepositoryHelper.DiscoverRepositoryPath(path.Value);
 
@@ -35,11 +73,12 @@ namespace R5T.D0038
                 var remoteOrigin = repository.Network.Remotes[GitHelper.OriginRemoteName];
 
                 var remoteRepositoryUrl = RemoteRepositoryUrl.From(remoteOrigin.Url);
-                return remoteRepositoryUrl;
+
+                return Task.FromResult(remoteRepositoryUrl);
             }
         }
 
-        public bool HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
+        public Task<bool> HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
         {
             using (var repository = new Repository(repositoryDirectoryPath.Value))
             {
@@ -50,11 +89,11 @@ namespace R5T.D0038
 
                 var hasUnpulledMasterBranchChanges = isBehind.HasValue && isBehind.Value > 0;
 
-                return hasUnpulledMasterBranchChanges;
+                return Task.FromResult(hasUnpulledMasterBranchChanges);
             }
         }
 
-        public bool HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
+        public Task<bool> HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
         {
             using (var repository = new Repository(repositoryDirectoryPath.Value))
             {
@@ -72,7 +111,7 @@ namespace R5T.D0038
                 hasUnPushedChanges = treeChanges.Count > 0;
                 if (hasUnPushedChanges)
                 {
-                    return hasUnPushedChanges;
+                    return Task.FromResult(hasUnPushedChanges);
                 }
 
                 // Get the current branch.
@@ -84,7 +123,7 @@ namespace R5T.D0038
                 hasUnPushedChanges = isUntracked;
                 if (hasUnPushedChanges)
                 {
-                    return hasUnPushedChanges;
+                    return Task.FromResult(hasUnPushedChanges);
                 }
 
                 // Is the current branch ahead its remote tracking branch?
@@ -93,11 +132,11 @@ namespace R5T.D0038
                 hasUnPushedChanges = currentBranchLocalIsAheadOfRemote;
                 if (hasUnPushedChanges)
                 {
-                    return hasUnPushedChanges;
+                    return Task.FromResult(hasUnPushedChanges);
                 }
 
                 // Finally, return the originally assumed value, that there are no unpushed changes.
-                return hasUnPushedChanges;
+                return Task.FromResult(hasUnPushedChanges);
             }
         }
     }

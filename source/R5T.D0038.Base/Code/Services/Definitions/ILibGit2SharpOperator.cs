@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using R5T.T0010;
 
@@ -6,25 +7,28 @@ using R5T.T0010;
 namespace R5T.D0038
 {
     /// <summary>
-    /// 
+    /// Service for the LibGit2Sharp 3rd party library.
     /// </summary>
     /// <remarks>
-    /// Service is synchronous because the underlying LibGit2Sharp library is synchronous.
+    /// Service is asynchronous even though the underlying LibGit2Sharp library is synchronous to better match possible internal service impedances.
+    /// This is done to critically avoid synchronous-over-asynchronous.
     /// </remarks>
     public interface ILibGit2SharpOperator
     {
-        bool HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
+        Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
+
+        Task<bool> HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
 
         /// <summary>
         /// Determines if a local repository's master branch is missing commits that exist the remote repository.
         /// </summary>
-        bool HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
+        Task<bool> HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
 
-        RemoteRepositoryUrl GetRemoteOriginUrl(LocalRepositoryContainedPath path);
+        Task<RemoteRepositoryUrl> GetRemoteOriginUrl(LocalRepositoryContainedPath path);
 
         /// <summary>
         /// Gets the latest revision for the master branch of the local repository containing the file or directory path, *not* the file or directory itself.
         /// </summary>
-        RevisionIdentity GetLatestLocalMasterRevision(LocalRepositoryContainedPath path);
+        Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path);
     }
 }
