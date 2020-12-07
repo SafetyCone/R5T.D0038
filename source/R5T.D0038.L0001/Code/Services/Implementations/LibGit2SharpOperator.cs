@@ -84,6 +84,10 @@ namespace R5T.D0038.L0001
             {
                 // Determine if the local master branch is behind the remote master branch.
                 var masterBranch = repository.Branches[GitHelper.MasterBranchName];
+                if(masterBranch is null)
+                {
+                    masterBranch = repository.Branches["main"];
+                }
 
                 var isBehind = masterBranch.TrackingDetails.BehindBy;
 
