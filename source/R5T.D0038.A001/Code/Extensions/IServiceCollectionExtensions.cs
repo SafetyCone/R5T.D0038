@@ -13,10 +13,10 @@ namespace R5T.D0038.A001
 {
     public static class IServiceCollectionExtensions
     {
-        public static ServiceAggregation AddLibGit2SharpOperatorActions(this IServiceCollection services,
+        public static ServiceAggregation AddLibGit2SharpOperatorServiceActions(this IServiceCollection services,
             IServiceAction<ISecretsDirectoryFilePathProvider> secretsDirectoryFilePathProviderAction)
         {
-            var gitAuthenticationProviderActions = services.AddGitAuthenticationProviderActions(
+            var gitAuthenticationProviderActions = services.AddGitAuthenticationProviderServiceActions(
                 secretsDirectoryFilePathProviderAction);
 
             var libGit2SharpOperatorAction = services.AddLibGit2SharpOperatorAction(
