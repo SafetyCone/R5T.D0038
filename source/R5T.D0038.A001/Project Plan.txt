@@ -1,0 +1,4 @@
+R5T.D0038.A001 - ILibGit2SharpOperator service aggregation library based on providing an R5T.Suebia.ISecretsDirectoryFilePathProvider.
+
+Goals
+

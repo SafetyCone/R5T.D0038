@@ -15,6 +15,10 @@ namespace R5T.D0038
     /// </remarks>
     public interface ILibGit2SharpOperator
     {
+        Task<string> Clone(
+            string sourceUrl,
+            LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
+
         Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
 
         Task<bool> HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);

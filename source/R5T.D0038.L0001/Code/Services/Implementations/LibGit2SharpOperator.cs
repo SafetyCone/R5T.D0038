@@ -24,6 +24,27 @@ namespace R5T.D0038.L0001
             this.GitAuthenticationProvider = gitAuthenticationProvider;
         }
 
+        public async Task<string> Clone(
+            string sourceUrl,
+            LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
+        {
+            var authentication = await this.GitAuthenticationProvider.GetGitAuthentication();
+
+            var options = new CloneOptions
+            {
+                CredentialsProvider = new CredentialsHandler((url, usernameFromUrl, types) =>
+                    new UsernamePasswordCredentials()
+                    {
+                        Username = authentication.Username,
+                        Password = authentication.Password,
+                    }),
+            };
+
+            var repositoryDirectoryPath = Repository.Clone(sourceUrl, localRepositoryDirectoryPath.Value, options);
+            return repositoryDirectoryPath;
+        }
+
+
         // Adapted from here: https://github.com/libgit2/libgit2sharp/wiki/git-fetch
         public async Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
         {
