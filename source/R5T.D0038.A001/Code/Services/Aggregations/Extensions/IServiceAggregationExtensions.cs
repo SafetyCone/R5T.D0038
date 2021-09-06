@@ -11,7 +11,7 @@ namespace R5T.D0038.A001
         {
             (aggregation as D0046.A001.IServiceAggregation).FillFrom(other);
 
-            aggregation.LibGit2SharpOperatorAction = other.LibGit2SharpOperatorAction;
+            (aggregation as IServiceAggregationIncrement).FillFrom(other);
 
             return aggregation;
         }
