@@ -16,17 +16,17 @@ namespace R5T.D0038.A001
         public static ServiceAggregation AddLibGit2SharpOperatorServiceActions(this IServiceCollection services,
             IServiceAction<ISecretsDirectoryFilePathProvider> secretsDirectoryFilePathProviderAction)
         {
-            var gitAuthenticationProviderActions = services.AddGitAuthenticationProviderServiceActions(
+            var gitAuthenticationProviderServiceActions = services.AddGitAuthenticationProviderServiceActions(
                 secretsDirectoryFilePathProviderAction);
 
             var libGit2SharpOperatorAction = services.AddLibGit2SharpOperatorAction(
-                gitAuthenticationProviderActions.GitAuthenticationProviderAction);
+                gitAuthenticationProviderServiceActions.GitAuthenticationProviderAction);
 
             var output = new ServiceAggregation
             {
                 LibGit2SharpOperatorAction = libGit2SharpOperatorAction,
             }
-            .FillFrom(gitAuthenticationProviderActions)
+            .FillFrom(gitAuthenticationProviderServiceActions)
             ;
 
             return output;
