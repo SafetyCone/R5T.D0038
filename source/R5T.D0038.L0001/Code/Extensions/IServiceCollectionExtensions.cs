@@ -15,11 +15,13 @@ namespace R5T.D0038.L0001
         /// Adds the <see cref="LibGit2SharpOperator"/> implementation of <see cref="ILibGit2SharpOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
         public static IServiceCollection AddLibGit2SharpOperator(this IServiceCollection services,
-            IServiceAction<IGitAuthenticationProvider> gitAuthenticationProviderAction)
+            IServiceAction<IGitAuthenticationProvider> gitAuthenticationProviderAction,
+            IServiceAction<IGitAuthorProvider> gitAuthorProviderAction)
         {
             services
                 .AddSingleton<ILibGit2SharpOperator, LibGit2SharpOperator>()
                 .Run(gitAuthenticationProviderAction)
+                .Run(gitAuthorProviderAction)
                 ;
 
             return services;
@@ -29,10 +31,12 @@ namespace R5T.D0038.L0001
         /// Adds the <see cref="LibGit2SharpOperator"/> implementation of <see cref="ILibGit2SharpOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
         public static IServiceAction<ILibGit2SharpOperator> AddLibGit2SharpOperatorAction(this IServiceCollection services,
-            IServiceAction<IGitAuthenticationProvider> gitAuthenticationProviderAction)
+            IServiceAction<IGitAuthenticationProvider> gitAuthenticationProviderAction,
+            IServiceAction<IGitAuthorProvider> gitAuthorProviderAction)
         {
             var serviceAction = ServiceAction.New<ILibGit2SharpOperator>(() => services.AddLibGit2SharpOperator(
-                gitAuthenticationProviderAction));
+                gitAuthenticationProviderAction,
+                gitAuthorProviderAction));
 
             return serviceAction;
         }

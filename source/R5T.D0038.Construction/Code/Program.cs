@@ -48,7 +48,18 @@ namespace R5T.D0038.Construction
 
         private Task RunMethod()
         {
-            return this.Test_CloneRemoteRepository();
+            return this.Test_ListAllUnstagedChanges();
+            //return this.Test_CloneRemoteRepository();
+        }
+
+        public async Task Test_ListAllUnstagedChanges()
+        {
+            var localRepositoryDirectoryPath = @"C:\Code\DEV\Git\GitHub\SafetyCone\R5T.D0038";
+
+            var libGit2SharpOperator = this.ServiceProvider.GetRequiredService<ILibGit2SharpOperator>();
+
+            var unstagedPaths = await libGit2SharpOperator.ListAllUnstagedPaths(
+                new LocalRepositoryDirectoryPath(localRepositoryDirectoryPath));
         }
 
         /// <summary>
@@ -61,7 +72,7 @@ namespace R5T.D0038.Construction
 
             var libGit2SharpOperator = this.ServiceProvider.GetRequiredService<ILibGit2SharpOperator>();
 
-            await libGit2SharpOperator.Clone(
+            await libGit2SharpOperator.CloneNonIdempotent(
                 remoteRepositoryUrl,
                 new LocalRepositoryDirectoryPath(localRepositoryDirectoryPath));
         }

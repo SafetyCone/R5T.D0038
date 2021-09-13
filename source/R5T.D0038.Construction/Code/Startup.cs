@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using R5T.Dacia;
 
 using R5T.D0046.Default;
+using R5T.D0046.I001;
 using R5T.D0082.D001.I001;
 using R5T.T0027.T008;
 
@@ -46,6 +47,8 @@ namespace R5T.D0038.Construction
             // Level 1.
             var gitHubAuthenticationProviderAction = services.AddGitHubAuthenticationProviderAction(
                 providedServices.SecretsDirectoryFilePathProviderAction);
+            var gitAuthorProviderAction = services.AddGitAuthorProviderAction(
+                providedServices.SecretsDirectoryFilePathProviderAction);
 
             // Level 2.
             var gitAuthenticationProviderAction = services.AddGitAuthenticationProviderAction(
@@ -53,7 +56,8 @@ namespace R5T.D0038.Construction
 
             // Level 3.
             var libGit2SharpOperatorAction = services.AddLibGit2SharpOperatorAction(
-                gitAuthenticationProviderAction);
+                gitAuthenticationProviderAction,
+                gitAuthorProviderAction);
 
             // Operations.
             // Level 1.

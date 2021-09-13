@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using R5T.T0010;
@@ -15,9 +16,12 @@ namespace R5T.D0038
     /// </remarks>
     public interface ILibGit2SharpOperator
     {
-        Task<string> Clone(
+        Task<string> CloneNonIdempotent(
             string sourceUrl,
             LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
+
+        Task Commit(LocalRepositoryDirectoryPath localRepositoryDirectoryPath,
+            string commitMessage);
 
         Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
 
@@ -34,5 +38,12 @@ namespace R5T.D0038
         /// Gets the latest revision for the master branch of the local repository containing the file or directory path, *not* the file or directory itself.
         /// </summary>
         Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path);
+
+        Task<string[]> ListAllUnstagedPaths(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
+
+        Task Push(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
+
+        Task Stage(LocalRepositoryDirectoryPath localRepositoryDirectoryPath,
+            IEnumerable<string> filePaths);
     }
 }
