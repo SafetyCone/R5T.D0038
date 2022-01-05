@@ -10,11 +10,13 @@ using R5T.D0046;
 using R5T.L0001;
 using R5T.T0008;
 using R5T.T0010;
+using R5T.T0064;
 
 
 namespace R5T.D0038.L0001
 {
-    public class LibGit2SharpOperator : ILibGit2SharpOperator
+    [ServiceImplementationMarker]
+    public class LibGit2SharpOperator : ILibGit2SharpOperator, IServiceImplementation
     {
         private IGitAuthenticationProvider GitAuthenticationProvider { get; }
         private IGitAuthorProvider GitAuthorProvider { get; }

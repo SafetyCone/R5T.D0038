@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using R5T.T0010;
+using R5T.T0064;
 
 
 namespace R5T.D0038
@@ -14,7 +15,8 @@ namespace R5T.D0038
     /// Service is asynchronous even though the underlying LibGit2Sharp library is synchronous to better match possible internal service impedances.
     /// This is done to critically avoid synchronous-over-asynchronous.
     /// </remarks>
-    public interface ILibGit2SharpOperator
+    [ServiceDefinitionMarker]
+    public interface ILibGit2SharpOperator : IServiceDefinition
     {
         Task<string> CloneNonIdempotent(
             string sourceUrl,
