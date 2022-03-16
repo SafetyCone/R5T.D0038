@@ -27,6 +27,13 @@ namespace R5T.D0038
 
         Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
 
+        Task<RemoteRepositoryUrl> GetRemoteOriginUrl(LocalRepositoryContainedPath path);
+
+        /// <summary>
+        /// Gets the latest revision for the master branch of the local repository containing the file or directory path, *not* the file or directory itself.
+        /// </summary>
+        Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path);
+
         Task<bool> HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
 
         /// <summary>
@@ -34,12 +41,7 @@ namespace R5T.D0038
         /// </summary>
         Task<bool> HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath);
 
-        Task<RemoteRepositoryUrl> GetRemoteOriginUrl(LocalRepositoryContainedPath path);
-
-        /// <summary>
-        /// Gets the latest revision for the master branch of the local repository containing the file or directory path, *not* the file or directory itself.
-        /// </summary>
-        Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path);
+        Task<bool> IsRepository(string directoryPath);
 
         Task<string[]> ListAllUnstagedPaths(LocalRepositoryDirectoryPath localRepositoryDirectoryPath);
 

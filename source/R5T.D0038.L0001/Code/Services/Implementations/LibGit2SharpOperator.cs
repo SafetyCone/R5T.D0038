@@ -223,5 +223,12 @@ namespace R5T.D0038.L0001
 
             repository.Network.Push(repository.Head, pushOptions);
         }
+
+        public Task<bool> IsRepository(string directoryPath)
+        {
+            var output = Repository.IsValid(directoryPath);
+            
+            return Task.FromResult(output);
+        }
     }
 }
