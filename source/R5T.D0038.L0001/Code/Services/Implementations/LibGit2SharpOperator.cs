@@ -176,6 +176,23 @@ namespace R5T.D0038.L0001
             return Task.CompletedTask;
         }
 
+        public async Task Commit(LocalRepositoryDirectoryPath localRepositoryDirectoryPath, string filePath, string commitMessage)
+        {
+            var author = await this.GitAuthorProvider.GetGitAuthor();
+
+            var authorSignature = new Signature(author.Name, author.EmailAddress, DateTime.Now);
+            var committerSignature = authorSignature;
+
+            using var repository = new Repository(localRepositoryDirectoryPath.Value);
+
+            Commands.Stage(repository, filePath);
+
+            repository.Commit(
+                commitMessage,
+                authorSignature,
+                committerSignature);
+        }
+
         public async Task Commit(LocalRepositoryDirectoryPath localRepositoryDirectoryPath, string commitMessage)
         {
             var author = await this.GitAuthorProvider.GetGitAuthor();
