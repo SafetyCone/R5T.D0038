@@ -170,8 +170,11 @@ namespace R5T.D0038.L0001
         {
             using var repository = new Repository(localRepositoryDirectoryPath.Value);
 
-            // Stage paths.
-            Commands.Stage(repository, filePaths);
+            // Stage paths, if any.
+            if(filePaths.Any())
+            {
+                Commands.Stage(repository, filePaths);
+            }
 
             return Task.CompletedTask;
         }
