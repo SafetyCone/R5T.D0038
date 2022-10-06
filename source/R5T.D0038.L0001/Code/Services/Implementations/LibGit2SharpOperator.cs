@@ -206,7 +206,6 @@ namespace R5T.D0038.L0001
             using var repository = new Repository(localRepositoryDirectoryPath.Value);
 
             var anyToCommit = repository.Index.Where(x => x.StageLevel == StageLevel.Staged).Any();
-
             if (anyToCommit)
             {
                 repository.Commit(
