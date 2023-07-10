@@ -208,6 +208,10 @@ namespace R5T.D0038.L0001
             var anyToCommit = repository.Index.Where(x => x.StageLevel == StageLevel.Staged).Any();
             if (anyToCommit)
             {
+                // NOTE: issue might be that there is nothing to commit, because prior commit succeeded.
+                // But the push failed due to changes present in the remote repository that have not been pulled locally.
+                // TODO: handle this case, ignore commit failure, try push.
+
                 repository.Commit(
                     commitMessage,
                     authorSignature,
