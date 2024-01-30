@@ -15,6 +15,13 @@ using R5T.T0064;
 
 namespace R5T.D0038.L0001
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// New work in R5T.L0083.F001.
+    /// Other work in R5T.F0019.
+    /// </remarks>
     [ServiceImplementationMarker]
     public class LibGit2SharpOperator : ILibGit2SharpOperator, IServiceImplementation
     {
@@ -30,6 +37,12 @@ namespace R5T.D0038.L0001
             this.GitAuthorProvider = gitAuthorProvider;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// See new work at R5T.L0083.F001.ILibGit2SharpOperator.Clone_NonIdempotent().
+        /// </remarks>
         public async Task<string> CloneNonIdempotent(
             string sourceUrl,
             LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
@@ -50,6 +63,12 @@ namespace R5T.D0038.L0001
             return repositoryDirectoryPath;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// See new work at R5T>L0083.F001.ILibGit2SharpOperator.Fetch().
+        /// </remarks>
         // Adapted from here: https://github.com/libgit2/libgit2sharp/wiki/git-fetch
         public async Task Fetch(LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
         {
@@ -73,6 +92,7 @@ namespace R5T.D0038.L0001
             Commands.Fetch(repository, remote.Name, refSpecs, fetchOptions, String.Empty);
         }
 
+        // See R5T.L0083.F001.
         public Task<RevisionIdentity> GetLatestLocalMasterRevision(LocalRepositoryContainedPath path)
         {
             var repositoryPath = RepositoryHelper.DiscoverRepositoryPath(path.Value);
@@ -88,6 +108,7 @@ namespace R5T.D0038.L0001
             return Task.FromResult(revisionIdentity);
         }
 
+        // See R5T.L0083.F001.
         public Task<RemoteRepositoryUrl> GetRemoteOriginUrl(LocalRepositoryContainedPath path)
         {
             var repositoryPath = RepositoryHelper.DiscoverRepositoryPath(path.Value);
@@ -101,6 +122,7 @@ namespace R5T.D0038.L0001
             return Task.FromResult(remoteRepositoryUrl);
         }
 
+        // See R5T.L0083.F001.
         public Task<bool> HasUnpulledMasterBranchChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
         {
             using var repository = new Repository(repositoryDirectoryPath.Value);
@@ -119,6 +141,7 @@ namespace R5T.D0038.L0001
             return Task.FromResult(hasUnpulledMasterBranchChanges);
         }
 
+        // See R5T.L0083.F001.
         public Task<bool> HasUnpushedLocalChanges(LocalRepositoryDirectoryPath repositoryDirectoryPath)
         {
             using var repository = new Repository(repositoryDirectoryPath.Value);
@@ -165,6 +188,7 @@ namespace R5T.D0038.L0001
             return Task.FromResult(hasUnPushedChanges);
         }
 
+        // See R5T.L0083.F001.
         public Task Stage(LocalRepositoryDirectoryPath localRepositoryDirectoryPath,
             IEnumerable<string> filePaths)
         {
@@ -196,6 +220,7 @@ namespace R5T.D0038.L0001
                 committerSignature);
         }
 
+        // See R5T.L0083.F001.
         public async Task Commit(LocalRepositoryDirectoryPath localRepositoryDirectoryPath, string commitMessage)
         {
             var author = await this.GitAuthorProvider.GetGitAuthor();
@@ -219,6 +244,7 @@ namespace R5T.D0038.L0001
             }
         }
 
+        // See R5T.L0083.F001.
         public Task<string[]> ListAllUnstagedPaths(LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
         {
             using var repository = new Repository(localRepositoryDirectoryPath.Value);
@@ -233,6 +259,7 @@ namespace R5T.D0038.L0001
         /// <summary>
         /// Push the HEAD branch.
         /// </summary>
+        // See R5T.L0083.F001.
         public async Task Push(LocalRepositoryDirectoryPath localRepositoryDirectoryPath)
         {
             var authentication = await this.GitAuthenticationProvider.GetGitAuthentication();
@@ -252,6 +279,7 @@ namespace R5T.D0038.L0001
             repository.Network.Push(repository.Head, pushOptions);
         }
 
+        // See R5T.L0083.F001.
         public Task<bool> IsRepository(string directoryPath)
         {
             var output = Repository.IsValid(directoryPath);
